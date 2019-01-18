@@ -2253,6 +2253,8 @@ get_memory() {
                 esac
             done < /proc/meminfo
 
+            mem_total_kB=${mem_total}
+
             mem_used="$((mem_used / 1024))"
             mem_total="$((mem_total / 1024))"
         ;;
@@ -2353,7 +2355,10 @@ get_memory() {
 
     [[ "$memory_percent" == "on" ]] && ((mem_perc=mem_used * 100 / mem_total))
 
-    memory="${mem_used}${mem_label:-MiB} / ${mem_total}${mem_label:-MiB} ${mem_perc:+(${mem_perc}%)}"
+    # mem total to GB
+    mem_total_gb="$((mem_total_kB / 1000000))"
+
+    memory="${mem_used}${mem_label:-MiB} / ${mem_total}${mem_label:-MiB} ${mem_perc:+(${mem_perc}%)} / (total ${mem_total_gb}GB)"
 
     # Bars.
     case "$memory_display" in
